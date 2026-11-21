@@ -402,6 +402,11 @@ footer.site-footer{border-top:1px solid var(--line);padding:26px 4px;display:fle
   .kpi-card .kc-val{font-size:22px;}
   .goal-nums{gap:16px;}
 }
+
+.ir-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+#page-budget .item-row{gap:12px;flex-wrap:wrap;}
+#page-budget .ir-main{min-width:180px;}
+@media(max-width:600px){#page-budget .ir-actions{width:100%;justify-content:flex-start;}}
 </style>
 </head>
 <body>
@@ -619,6 +624,10 @@ footer.site-footer{border-top:1px solid var(--line);padding:26px 4px;display:fle
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
         المصاريف
       </div>
+      <div class="side-link" data-route="budget" data-action="go" data-route="budget">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3M16 14h.01"/></svg>
+        الميزانيات والالتزامات
+      </div>
       <div class="side-link" data-route="goals" data-action="go" data-route="goals">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
         الأهداف المالية
@@ -667,6 +676,14 @@ footer.site-footer{border-top:1px solid var(--line);padding:26px 4px;display:fle
           <div class="kc-label"><div class="kc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M5 9l7-7 7 7M5 15l7 7 7-7" opacity="0"/><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>الفائض القابل للإدخار</div>
           <div class="kc-val num" id="kpiSurplus">0</div>
           <div class="kc-note" id="kpiSurplusNote">الدخل − المصاريف</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px;">
+        <div class="list-toolbar"><div><h3 style="margin:0;">الميزانية الشهرية</h3><div class="card-sub">تشمل المصاريف والالتزامات والأقساط المستحقة</div></div><button class="btn btn-ghost btn-sm" data-action="go" data-route="budget">إدارة الميزانية ←</button></div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div><div class="kc-label">المتبقي من الميزانية</div><div class="kc-val num" id="dashBudgetRemaining">—</div><div class="kc-note" id="dashBudgetNote">حدد ميزانيتك الشهرية</div></div>
+          <div><div class="kc-label">المصروفات والالتزامات المحسوبة</div><div class="kc-val num" id="dashBudgetSpent">0</div><div class="kc-note">تشمل أقساط تابي وتمارا وغيرها</div></div>
         </div>
       </div>
 
@@ -729,6 +746,16 @@ footer.site-footer{border-top:1px solid var(--line);padding:26px 4px;display:fle
         <div class="kc-val num" id="expenseTotalDisplay" style="color:var(--coral-400);font-size:20px;">0</div>
       </div>
       <div id="expenseList" class="item-list"></div>
+    </section>
+
+    <!-- BUDGETS & COMMITMENTS -->
+    <section id="page-budget" class="page hidden">
+      <div class="topbar"><div><h1>الميزانيات والالتزامات</h1><div class="tb-sub">ميزانية الشهر مع احتساب الأقساط والالتزامات في كل الحسابات</div></div><button class="btn btn-gold" data-action="openCommitmentModal">+ إضافة التزام / قسط</button></div>
+      <div class="grid-2">
+        <div class="card"><h3>ميزانية الشهر الحالي</h3><div class="field"><label for="monthlyBudgetInput">حد الميزانية الشهرية</label><input id="monthlyBudgetInput" type="number" min="0" step="0.01" placeholder="أدخل مبلغ الميزانية"></div><button class="btn btn-gold" data-action="saveMonthlyBudget">حفظ الميزانية</button><div class="card-sub" id="budgetMonthLabel" style="margin-top:12px;"></div></div>
+        <div class="card"><h3>ملخص الميزانية</h3><div class="item-row"><div class="ir-main"><div class="ir-title">إجمالي المصاريف والالتزامات</div></div><div class="ir-amount num" id="budgetSpent">0</div></div><div class="item-row"><div class="ir-main"><div class="ir-title">المتبقي</div></div><div class="ir-amount num" id="budgetRemaining">—</div></div><div class="item-row"><div class="ir-main"><div class="ir-title">نسبة الاستخدام</div></div><div class="ir-amount num" id="budgetPercent">—</div></div><div class="card-sub">كل قسط مجدول يُحتسب مرة واحدة في شهر استحقاقه، سواء تم تأكيد الدفع أم لا.</div></div>
+      </div>
+      <div class="card" style="margin-top:18px;"><div class="list-toolbar"><div><h3 style="margin:0;">الالتزامات والأقساط</h3><div class="card-sub">تابي، تمارا، أقساط السيارات، وأي التزام متكرر</div></div></div><div id="commitmentList" class="item-list"></div></div>
     </section>
 
     <!-- GOALS -->
@@ -896,6 +923,8 @@ footer.site-footer{border-top:1px solid var(--line);padding:26px 4px;display:fle
   </div>
 </div>
 
+<div class="modal-overlay hidden" id="modalCommitment"><div class="modal"><div class="modal-head"><h3>إضافة التزام أو قسط</h3><button class="modal-close" data-action="closeModal" data-modal="modalCommitment">✕</button></div><form id="commitmentForm"><div class="field"><label>اسم الالتزام</label><input id="commitment-name" required placeholder="مثال: طلب تابي / تمارا"></div><div class="field-row"><div class="field"><label>الجهة</label><select id="commitment-provider"><option value="تابي">تابي</option><option value="تمارا">تمارا</option><option value="قسط سيارة">قسط سيارة</option><option value="أخرى">أخرى</option></select></div><div class="field"><label>إجمالي المبلغ</label><input id="commitment-total" type="number" min="0.01" step="0.01" required></div></div><div class="field-row"><div class="field"><label>مبلغ القسط الشهري</label><input id="commitment-installment" type="number" min="0.01" step="0.01" required></div><div class="field"><label>عدد الأقساط</label><input id="commitment-count" type="number" min="1" step="1" required></div></div><div class="field"><label>شهر أول قسط</label><input id="commitment-start" type="month" required></div><div class="card-sub">سيُحسب القسط الأخير تلقائياً بما لا يتجاوز إجمالي المبلغ، وتُدرج الأقساط في المخططات والتقارير والتوقعات.</div><div class="modal-foot"><button class="btn btn-gold btn-block" type="submit">حفظ الالتزام</button></div></form></div></div>
+
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
@@ -955,6 +984,10 @@ const db = {
     fromDb: r => ({id:r.id, name:r.name, amount:Number(r.amount), category:r.category, type:r.type, duration:r.duration, startMonthIdx:r.start_month_idx, revisions:r.revisions||[]}),
     toDb: e => ({name:e.name, amount:e.amount, category:e.category, type:e.type, duration:e.duration, start_month_idx:e.startMonthIdx, revisions:e.revisions||[]}),
   },
+  commitments: {
+    fromDb: r => ({id:r.id,name:r.name,provider:r.provider,totalAmount:Number(r.total_amount),installmentAmount:Number(r.installment_amount),installmentCount:Number(r.installment_count),startMonthIdx:Number(r.start_month_idx),paidMonths:r.paid_months||[]}),
+    toDb: c => ({name:c.name,provider:c.provider,total_amount:c.totalAmount,installment_amount:c.installmentAmount,installment_count:c.installmentCount,start_month_idx:c.startMonthIdx,paid_months:c.paidMonths||[]}),
+  },
   goals: {
     fromDb: (r, deposits=[], installments=[]) => ({id:r.id, name:r.name, target:Number(r.target), current:Number(r.initial_amount)+deposits.reduce((sum,d)=>sum+Number(d.amount),0), months:r.months, startMonthIdx:r.start_month_idx, deposits:deposits.map(d=>({amount:Number(d.amount),monthIdx:d.month_idx})), installments}),
     toDb: g => ({name:g.name, target:g.target, initial_amount:g.current, months:g.months, start_month_idx:g.startMonthIdx}),
@@ -967,10 +1000,12 @@ const db = {
       sb.from('goals').select('*').order('id'),
       sb.from('goal_deposits').select('goal_id,amount,month_idx').order('id'),
       sb.from('goal_installments').select('id,goal_id,month_idx,planned_amount,paid_amount,paid_at,deposit_id').order('month_idx'),
+      sb.from('monthly_budgets').select('*').eq('month_idx',CUR_MONTH_IDX).maybeSingle(),
+      sb.from('commitments').select('*').order('id'),
     ]);
     const failed = queries.find(r=>r.error);
     if(failed) throw failed.error;
-    const [profile, income, expenses, goals, deposits, installments] = queries.map(x=>x.data);
+    const [profile, income, expenses, goals, deposits, installments, monthlyBudget, commitments] = queries.map(x=>x.data);
     if(!profile) throw new Error('Missing profile for the logged-in account');
     state.user = {id:profile.id, name:profile.name, email:state.session.user.email, currency:profile.currency};
     state.onboarded = !!profile.onboarded;
@@ -981,6 +1016,8 @@ const db = {
     const byGoalInstallments = new Map();
     (installments||[]).forEach(x=>byGoalInstallments.set(String(x.goal_id), [...(byGoalInstallments.get(String(x.goal_id))||[]),x]));
     state.goals = (goals||[]).map(g=>this.goals.fromDb(g,byGoal.get(String(g.id))||[],byGoalInstallments.get(String(g.id))||[]));
+    state.monthlyBudget = monthlyBudget ? Number(monthlyBudget.amount) : null;
+    state.commitments = (commitments||[]).map(this.commitments.fromDb);
   },
   async insert(table,obj){
     if(!state.session?.user?.id) throw new Error('Sign in first');
@@ -998,6 +1035,20 @@ const db = {
     if(error) throw error;
     if(!data?.length) throw new Error('No record was updated');
   },
+  async saveMonthlyBudget(amount){
+    const {error}=await sb.from('monthly_budgets').upsert({user_id:state.session.user.id,month_idx:CUR_MONTH_IDX,amount},{onConflict:'user_id,month_idx'});
+    if(error) throw error;
+  },
+  async addCommitment(obj){
+    const payload={...this.commitments.toDb(obj),user_id:state.session.user.id};
+    const {data,error}=await sb.from('commitments').insert(payload).select().single();
+    if(error) throw error; return this.commitments.fromDb(data);
+  },
+  async updateCommitment(id,paidMonths){
+    const {error}=await sb.from('commitments').update({paid_months:paidMonths}).eq('id',id).eq('user_id',state.session.user.id);
+    if(error) throw error;
+  },
+  async removeCommitment(id){const {error}=await sb.from('commitments').delete().eq('id',id).eq('user_id',state.session.user.id);if(error)throw error;},
   async addGoalDeposit(goalId,amount){
     const {error} = await sb.rpc('fn_add_deposit',{p_goal_id:Number(goalId),p_amount:amount});
     if(error) throw error;
@@ -1052,6 +1103,8 @@ let state = {
   onboarded: false,
   income: [],             // {id,name,amount,recurrence,months,day,createdMonthIdx,revisions:[{effectiveMonthIdx,...}]}
   expenses: [],           // {id,name,amount,category,type,duration,startMonthIdx,revisions:[{effectiveMonthIdx,...}]}
+  monthlyBudget: null,
+  commitments: [],         // scheduled installments; included in all expense calculations
   goals: [],              // {id,name,target,current,months,startMonthIdx,deposits,installments}
   goalPlanEdit: {},
 };
@@ -1142,7 +1195,7 @@ const engine = {
   },
   monthlyExpenses(monthIdx, list){
     list = list || state.expenses;
-    return list.reduce((sum, ex0) => {
+    const regular = list.reduce((sum, ex0) => {
       const end = ex0.startMonthIdx + (ex0.duration||1) - 1;
       if(monthIdx >= ex0.startMonthIdx && monthIdx <= end){
         const ex = valuesAtMonth(ex0, monthIdx, EXPENSE_REVISION_FIELDS);
@@ -1150,7 +1203,16 @@ const engine = {
       }
       return sum;
     }, 0);
+    return regular + (list === state.expenses ? this.monthlyCommitments(monthIdx) : 0);
   },
+  commitmentAmount(c, monthIdx){
+    const offset=monthIdx-Number(c.startMonthIdx);
+    if(offset<0 || offset>=Number(c.installmentCount)) return 0;
+    const paidBefore=Number(c.installmentAmount)*Math.max(0,Number(c.installmentCount)-1);
+    const finalAmount=Math.max(0,Number(c.totalAmount)-paidBefore);
+    return offset===Number(c.installmentCount)-1 ? Math.min(Number(c.installmentAmount),finalAmount) : Math.min(Number(c.installmentAmount),Number(c.totalAmount)-offset*Number(c.installmentAmount));
+  },
+  monthlyCommitments(monthIdx){return (state.commitments||[]).reduce((sum,c)=>sum+this.commitmentAmount(c,monthIdx),0);},
   expensesByCategory(monthIdx){
     const map = {};
     state.expenses.forEach(ex0 => {
@@ -1160,6 +1222,8 @@ const engine = {
         map[ex.category] = (map[ex.category]||0) + ex.amount;
       }
     });
+    const commitments=this.monthlyCommitments(monthIdx);
+    if(commitments) map['التزامات']=(map['التزامات']||0)+commitments;
     return map;
   },
   surplus(monthIdx){
@@ -1202,8 +1266,8 @@ const engine = {
    This gives working back/forward buttons and shareable/deep-linkable URLs,
    instead of the old version which only mutated in-memory state.
 ========================================================================= */
-const VALID_ROUTES = ['landing','signup','login','reset','onboarding','dashboard','income','expenses','goals','reports','profile'];
-const APP_PAGES = ['dashboard','income','expenses','goals','reports','profile'];
+const VALID_ROUTES = ['landing','signup','login','reset','onboarding','dashboard','income','expenses','budget','goals','reports','profile'];
+const APP_PAGES = ['dashboard','income','expenses','budget','goals','reports','profile'];
 
 const router = {
   current: 'landing',
@@ -1334,6 +1398,11 @@ const app = {
       {id:'d8', name:'مطاعم وترفيه', amount:650, category:'ترفيه', type:'variable', duration:12, startMonthIdx: CUR_MONTH_IDX-1, revisions:[]},
       {id:'d9', name:'اشتراكات متنوعة', amount:150, category:'أخرى', type:'fixed', duration:12, startMonthIdx: CUR_MONTH_IDX-1, revisions:[]},
     ];
+    state.monthlyBudget = 9000;
+    state.commitments = [
+      {id:'c1',name:'طلب إلكترونيات',provider:'تابي',totalAmount:1200,installmentAmount:300,installmentCount:4,startMonthIdx:CUR_MONTH_IDX-1,paidMonths:[]},
+      {id:'c2',name:'مشتريات منزلية',provider:'تمارا',totalAmount:800,installmentAmount:200,installmentCount:4,startMonthIdx:CUR_MONTH_IDX,paidMonths:[]}
+    ];
     state.goals = [
       {id:'g1', name:'دفعة أولى — شقة', target:60000, current:37200, months:14, startMonthIdx: CUR_MONTH_IDX-8, deposits:[]},
       {id:'g2', name:'صندوق الطوارئ', target:20000, current:9500, months:10, startMonthIdx: CUR_MONTH_IDX-4, deposits:[]},
@@ -1360,7 +1429,7 @@ const app = {
     if(sb && state.session) { try { await sb.auth.signOut(); } catch(err){ console.error(err); } }
     state.session = null; state.demoMode = false;
     state.user = null; state.onboarded = false;
-    state.income = []; state.expenses = []; state.goals = [];
+    state.income = []; state.expenses = []; state.commitments=[]; state.monthlyBudget=null; state.goals = [];
     router.go('landing');
   },
 
@@ -1378,6 +1447,7 @@ const app = {
     if(name==='dashboard') this.renderDashboard();
     if(name==='income') this.renderIncome();
     if(name==='expenses') this.renderExpenses();
+    if(name==='budget') this.renderBudget();
     if(name==='goals') this.renderGoals();
     if(name==='reports') this.renderReports();
     if(name==='profile') this.renderProfile();
@@ -1405,7 +1475,11 @@ const app = {
     document.getElementById('kpiExpense').textContent = fmt(exp) + ' ' + currency();
     document.getElementById('kpiSurplus').textContent = fmt(sur) + ' ' + currency();
     document.getElementById('kpiIncomeNote').textContent = state.income.length + ' مصدر دخل نشط';
-    document.getElementById('kpiExpenseNote').textContent = state.expenses.length + ' مصروف مسجّل';
+    document.getElementById('kpiExpenseNote').textContent = state.expenses.length + ' مصروف + ' + state.commitments.length + ' التزام مجدول';
+    const dashSpent=engine.monthlyExpenses(CUR_MONTH_IDX); const dashRemaining=state.monthlyBudget==null?null:state.monthlyBudget-dashSpent;
+    document.getElementById('dashBudgetSpent').textContent=fmt(dashSpent)+' '+currency();
+    document.getElementById('dashBudgetRemaining').textContent=dashRemaining==null?'—':fmt(dashRemaining)+' '+currency();
+    document.getElementById('dashBudgetNote').textContent=state.monthlyBudget==null?'حدد ميزانيتك الشهرية':`من أصل ${fmt(state.monthlyBudget)} ${currency()}`;
     const surCard = document.getElementById('kpiSurplusCard');
     surCard.classList.toggle('deficit', sur < 0);
     document.getElementById('kpiSurplusNote').textContent = sur >= 0 ? 'وضع صحي — قابل للإدخار' : 'تنبيه: مصاريفك تتجاوز دخلك';
@@ -1568,14 +1642,16 @@ const app = {
         Object.keys(CATEGORY_META).map(c=>`<div class="chip" data-cat="${esc(c)}" data-action="filterExpenses">${esc(CATEGORY_META[c].icon)} ${esc(c)}</div>`).join('');
     }
     const filtered = this.activeExpenseFilter==='all' ? state.expenses : state.expenses.filter(e=>currentView(e, EXPENSE_REVISION_FIELDS).category===this.activeExpenseFilter);
-    document.getElementById('expenseTotalDisplay').textContent = fmt(engine.monthlyExpenses(CUR_MONTH_IDX, filtered)) + ' ' + currency();
+    const filteredCommitments = (this.activeExpenseFilter==='all' || this.activeExpenseFilter==='التزامات') ? (state.commitments||[]).filter(c=>engine.commitmentAmount(c,CUR_MONTH_IDX)>0) : [];
+    const visibleTotal = engine.monthlyExpenses(CUR_MONTH_IDX, filtered) + (this.activeExpenseFilter==='all' ? 0 : filteredCommitments.reduce((sum,c)=>sum+engine.commitmentAmount(c,CUR_MONTH_IDX),0));
+    document.getElementById('expenseTotalDisplay').textContent = fmt(visibleTotal) + ' ' + currency();
     const list = document.getElementById('expenseList');
-    if(!filtered.length){
+    if(!filtered.length && !filteredCommitments.length){
       list.innerHTML = `<div class="empty-state"><div class="es-icon">🧾</div><h4>لا توجد مصاريف في هذا التصنيف</h4><p>أضف مصروفاً جديداً أو غيّر الفلتر</p></div>`;
       return;
     }
     const typeLabel = {fixed:'ثابت', variable:'متغير'};
-    list.innerHTML = filtered.map(ex0 => {
+    const expenseRows = filtered.map(ex0 => {
       const ex = currentView(ex0, EXPENSE_REVISION_FIELDS);
       const endIdx = ex.startMonthIdx + ex.duration - 1;
       const active = CUR_MONTH_IDX >= ex.startMonthIdx && CUR_MONTH_IDX <= endIdx;
@@ -1599,6 +1675,8 @@ const app = {
         </div>
       </div>`;
     }).join('');
+    const commitmentRows = filteredCommitments.map(c=>`<div class="item-row expense"><div class="ir-icon">📑</div><div class="ir-main"><div class="ir-title">${esc(c.name)}</div><div class="ir-meta"><span class="ir-tag">${esc(c.provider)}</span><span class="ir-tag">قسط مجدول</span></div></div><div class="ir-amount">${fmt(engine.commitmentAmount(c,CUR_MONTH_IDX))} ${esc(currency())}</div><button class="btn btn-ghost btn-sm" data-action="go" data-route="budget">إدارة الالتزام</button></div>`).join('');
+    list.innerHTML = expenseRows + commitmentRows;
   },
   async deleteExpense(id){
     if(!state.demoMode && sb){
@@ -1608,6 +1686,32 @@ const app = {
     toast('تم حذف/إيقاف المصروف');
     this.renderExpenses(); this.renderDashboard();
   },
+
+  /* ---------- BUDGETS & COMMITMENTS ---------- */
+  openCommitmentModal(){
+    document.getElementById('commitmentForm').reset();
+    document.getElementById('commitment-start').value=monthInputValue(CUR_MONTH_IDX);
+    document.getElementById('modalCommitment').classList.remove('hidden');
+  },
+  async saveMonthlyBudget(){
+    const amount=Number(document.getElementById('monthlyBudgetInput').value);
+    if(!Number.isFinite(amount)||amount<=0){toast('أدخل ميزانية شهرية صحيحة',true);return;}
+    try{if(!state.demoMode){if(!sb)throw new Error('Supabase is not configured');await db.saveMonthlyBudget(amount);}state.monthlyBudget=amount;toast('تم حفظ الميزانية الشهرية');this.renderBudget();this.renderDashboard();}
+    catch(err){dbErrorToast(err);}
+  },
+  renderBudget(){
+    const input=document.getElementById('monthlyBudgetInput');if(document.activeElement!==input)input.value=state.monthlyBudget??'';
+    document.getElementById('budgetMonthLabel').textContent=monthIdxToLabel(CUR_MONTH_IDX);
+    const spent=engine.monthlyExpenses(CUR_MONTH_IDX), remaining=state.monthlyBudget==null?null:state.monthlyBudget-spent;
+    document.getElementById('budgetSpent').textContent=fmt(spent)+' '+currency();
+    document.getElementById('budgetRemaining').textContent=remaining==null?'—':fmt(remaining)+' '+currency();
+    document.getElementById('budgetPercent').textContent=state.monthlyBudget?Math.round(spent/state.monthlyBudget*100)+'%':'—';
+    const list=document.getElementById('commitmentList');
+    if(!state.commitments.length){list.innerHTML='<div class="empty-state"><div class="es-icon">📑</div><h4>لا توجد التزامات مسجلة</h4><p>أضف أقساط تابي وتمارا أو أي التزام شهري ليظهر في كل الحسابات.</p></div>';return;}
+    list.innerHTML=state.commitments.map(c=>{const amount=engine.commitmentAmount(c,CUR_MONTH_IDX);const paid=(c.paidMonths||[]).includes(CUR_MONTH_IDX);const end=c.startMonthIdx+c.installmentCount-1;return `<div class="item-row"><div class="ir-icon">📑</div><div class="ir-main"><div class="ir-title">${esc(c.name)}</div><div class="ir-meta"><span class="ir-tag">${esc(c.provider)}</span><span class="ir-tag">${c.installmentCount} أقساط</span><span class="ir-tag">${esc(monthIdxToLabel(c.startMonthIdx))} – ${esc(monthIdxToLabel(end))}</span><span class="ir-tag">${paid?'تم تأكيد الدفع':'قسط الشهر غير مؤكد'}</span></div></div><div class="ir-amount">${fmt(amount)} ${esc(currency())}</div><div class="ir-actions">${amount?`<button class="btn btn-ghost btn-sm" data-action="toggleCommitmentPaid" data-id="${esc(c.id)}">${paid?'إلغاء التأكيد':'تأكيد الدفع'}</button>`:''}<button class="btn btn-danger btn-sm" data-action="deleteCommitment" data-id="${esc(c.id)}">حذف</button></div></div>`;}).join('');
+  },
+  async toggleCommitmentPaid(id){const c=state.commitments.find(x=>String(x.id)===String(id));if(!c)return;const months=new Set(c.paidMonths||[]);months.has(CUR_MONTH_IDX)?months.delete(CUR_MONTH_IDX):months.add(CUR_MONTH_IDX);const next=[...months];try{if(!state.demoMode){if(!sb)throw new Error('Supabase is not configured');await db.updateCommitment(c.id,next);}c.paidMonths=next;this.renderBudget();this.renderDashboard();toast('تم تحديث حالة القسط؛ لم تتم إضافته كمصروف ثانٍ.');}catch(err){dbErrorToast(err);}},
+  async deleteCommitment(id){const c=state.commitments.find(x=>String(x.id)===String(id));if(!c)return;if(!confirm('هل تريد حذف هذا الالتزام؟'))return;try{if(!state.demoMode){if(!sb)throw new Error('Supabase is not configured');await db.removeCommitment(c.id);}state.commitments=state.commitments.filter(x=>String(x.id)!==String(id));this.renderBudget();this.renderDashboard();toast('تم حذف الالتزام');}catch(err){dbErrorToast(err);}},
 
   /* ---------- GOALS ---------- */
   openGoalModal(item){
@@ -1720,16 +1824,19 @@ const app = {
       options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{padding:14}}}}
     });
 
-    const fixedTotal = state.expenses.filter(e=>e.type==='fixed').reduce((s,e)=>{
-      const end=e.startMonthIdx+e.duration-1; return CUR_MONTH_IDX>=e.startMonthIdx&&CUR_MONTH_IDX<=end?s+e.amount:s;
+    const fixedTotal = state.expenses.filter(e=>e.type==='fixed').reduce((sum,e)=>{
+      const end=e.startMonthIdx+e.duration-1; if(CUR_MONTH_IDX<e.startMonthIdx||CUR_MONTH_IDX>end)return sum;
+      return sum+valuesAtMonth(e,CUR_MONTH_IDX,EXPENSE_REVISION_FIELDS).amount;
     },0);
-    const varTotal = state.expenses.filter(e=>e.type==='variable').reduce((s,e)=>{
-      const end=e.startMonthIdx+e.duration-1; return CUR_MONTH_IDX>=e.startMonthIdx&&CUR_MONTH_IDX<=end?s+e.amount:s;
+    const varTotal = state.expenses.filter(e=>e.type==='variable').reduce((sum,e)=>{
+      const end=e.startMonthIdx+e.duration-1; if(CUR_MONTH_IDX<e.startMonthIdx||CUR_MONTH_IDX>end)return sum;
+      return sum+valuesAtMonth(e,CUR_MONTH_IDX,EXPENSE_REVISION_FIELDS).amount;
     },0);
+    const fixedWithCommitments = fixedTotal + engine.monthlyCommitments(CUR_MONTH_IDX);
     this.destroyChart('rfv');
     this.charts.rfv = safeChart(document.getElementById('reportFixedVar').getContext('2d'), {
       type:'doughnut',
-      data:{labels:['ثابت','متغير'], datasets:[{data:[fixedTotal,varTotal], backgroundColor:['#D9A441','#3FA796'], borderColor:'#151B38', borderWidth:3}]},
+      data:{labels:['ثابت','متغير'], datasets:[{data:[fixedWithCommitments,varTotal], backgroundColor:['#D9A441','#3FA796'], borderColor:'#151B38', borderWidth:3}]},
       options:{cutout:'60%', responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}}
     });
 
@@ -1872,7 +1979,7 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     state.session = data.session;
     state.user = {id:data.user.id, name, email, currency:currencyVal};
     state.onboarded = false;
-    state.income = []; state.expenses = []; state.goals = [];
+    state.income = []; state.expenses = []; state.commitments=[]; state.monthlyBudget=null; state.goals = [];
     toast('تم إنشاء حسابك بنجاح');
     document.getElementById('onbCur').textContent = currencyVal;
     router.go('onboarding');
@@ -2014,6 +2121,14 @@ document.getElementById('expenseForm').addEventListener('submit', async function
   } catch(err){ dbErrorToast(err); }
 });
 
+document.getElementById('commitmentForm').addEventListener('submit',async function(e){
+  e.preventDefault();const name=document.getElementById('commitment-name').value.trim(),provider=document.getElementById('commitment-provider').value,totalAmount=Number(document.getElementById('commitment-total').value),installmentAmount=Number(document.getElementById('commitment-installment').value),installmentCount=parseInt(document.getElementById('commitment-count').value,10),startMonthIdx=monthInputToIdx(document.getElementById('commitment-start').value);
+  if(!name||totalAmount<=0||installmentAmount<=0||installmentCount<1||installmentAmount*(installmentCount-1)>=totalAmount||installmentAmount*installmentCount<totalAmount){toast('تحقق من البيانات: مجموع الأقساط يجب أن يغطي إجمالي المبلغ',true);return;}
+  const draft={name,provider,totalAmount,installmentAmount,installmentCount,startMonthIdx,paidMonths:[]};const btn=this.querySelector('button[type="submit"]');btn.disabled=true;
+  try{if(state.demoMode){state.commitments.push({...draft,id:'local-c-'+Date.now()});}else{if(!sb)throw new Error('Supabase is not configured');state.commitments.push(await db.addCommitment(draft));}app.closeModal('modalCommitment');app.renderBudget();app.renderDashboard();app.renderReports();toast('تم تسجيل الالتزام وإدراجه في الميزانية والمخططات والتوقعات.');}
+  catch(err){dbErrorToast(err);}finally{btn.disabled=false;}
+});
+
 document.getElementById('goalForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const id = document.getElementById('goal-id').value;
@@ -2108,6 +2223,10 @@ document.addEventListener('click', function(e)
     case 'openIncomeModal': app.openIncomeModal(); break;
     case 'openExpenseModal': app.openExpenseModal(); break;
     case 'openGoalModal': app.openGoalModal(); break;
+    case 'openCommitmentModal': app.openCommitmentModal(); break;
+    case 'saveMonthlyBudget': app.saveMonthlyBudget(); break;
+    case 'toggleCommitmentPaid': app.toggleCommitmentPaid(id); break;
+    case 'deleteCommitment': app.deleteCommitment(id); break;
     case 'filterExpenses': app.filterExpenses(el); break;
     case 'saveProfile': app.saveProfile(); break;
     case 'closeModal': app.closeModal(el.dataset.modal); break;
